@@ -1,0 +1,34 @@
+{
+ "name": "design-framework",
+ "version": "1.0.0",
+ "description": "Components for v3 using felajs.",
+ "main": "index.js",
+ "files": [
+  "src"
+ ],
+ "scripts": {
+  "styleguide": "styleguidist server",
+  "styleguide:build": "styleguidist build",
+  "prettier": "prettier --tab-width 4 --use-tabs --no-semi --write --single-quote '*.js'"
+ },
+ "keywords": [],
+ "author": "",
+ "license": "ISC",
+ "dependencies": {
+  "fela": "^4.3.5",
+  "preact": "^8.1.0",
+  "preact-compat": "^3.16.0",
+  "preact-fela": "^5.0.0",
+  "prop-types": "^15.5.10",
+  "react": "^15.5.4",
+  "react-dom": "^15.5.4",
+  "react-fela": "^4.3.5"
+ },
+ "devDependencies": {
+  "babel-preset-env": "^1.5.2",
+  "loaders": "^1.1.3",
+  "prettier": "^1.4.4",
+  "react-styleguidist": "^5.3.2",
+  "webpack": "^2.6.1"
+ }
+}
