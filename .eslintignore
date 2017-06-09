@@ -1,0 +1,7 @@
+node_modules/
+*.json
+*.sh
+*.lock
+*.md
+*.html
+favicon.ico

@@ -1,10 +1,16 @@
-import React, { Component, Children, isValidElement, cloneElement } from 'react'
-import PropTypes from 'prop-types';
+import React, { Children, isValidElement, cloneElement } from 'react'
+import PropTypes from 'prop-types'
 import { createRenderer as createFelaRenderer, ThemeProvider } from 'fela'
 import { Provider } from 'react-fela'
-import { Theme as themeVariables } from './Theme'
-// should be from another file. Use this to drive themes.
 
+//get the react devtools to work
+require('preact/devtools')
+
+// should be from another file. Use this to drive themes.
+import { Theme as themeVariables } from './Theme'
+
+// default Opts, when shipped as a Provider to others, this has to be from props.
+// but styleguidist needs this at global.
 const defaultOpts = {
 	selectorPrefix: 'bms-',
 	dev: false,
@@ -12,16 +18,16 @@ const defaultOpts = {
 	cssNode: undefined
 }
 
-export const createRenderer = opts => {
+const createRenderer = opts => {
 	const usedOpts = Object.assign({}, defaultOpts, opts)
 	const plugins = []
 	const enhancers = []
 
 	if (usedOpts.dev === true) {
+		// enable these when you have something solid
 		// plugins.push(validator());
 		// enhancers.push(beautifier());
 		// enhancers.push(monolithic());
-		// enable these when you have something solid
 	}
 
 	return createFelaRenderer({
@@ -31,32 +37,43 @@ export const createRenderer = opts => {
 	})
 }
 
-export const StyleProvider = ({
-	selectorPrefix,
-	dev,
-	cssNode,
-	fontNode,
-	children,
-	...restProps
-}) => {
-	const renderer = createRenderer({
-		selectorPrefix,
-		dev,
-		fontNode
-	})
-	const child = Children.only(children)
-	return (
-		<Provider renderer={renderer} mountNode={cssNode}>
-			<ThemeProvider theme={themeVariables}>
-				{isValidElement(child)
-					? cloneElement(child, { ...restProps })
-					: child}
-			</ThemeProvider>
-		</Provider>
-	)
+//get the mount node for styles from the html.
+const getFelaMountNode = () => {
+	const node = document.getElementById('fela-stylesheet')
+	const parent = node && node.parentNode
+	if (!node || !parent) {
+		throw new Error('missing stylesheet node for Fela')
+	}
+	// Always create a new style element to handle hot reloading.
+	// During isomorphic injection new dom is needed to sync style state.
+	// Taken from este repo.
+	const nextNode = document.createElement('style')
+	nextNode.id = 'fela-stylesheet'
+	parent.replaceChild(nextNode, node)
+	return nextNode
 }
 
-StyleProvider.defaultProps = defaultOpts
+// Keep one node to track the styles. Easier since jss also has its styles.
+const felaMountNode = getFelaMountNode()
+
+// Use the below function to customer dev/prod mode plugins
+const felaRenderer = createRenderer({})
+
+class StyleProvider extends React.Component {
+	render() {
+		const child = Children.only(this.props.children)
+		return (
+			<Provider renderer={felaRenderer} mountNode={felaMountNode}>
+				<ThemeProvider theme={themeVariables}>
+					{isValidElement(child)
+						? cloneElement(child, { ...this.props })
+						: child}
+				</ThemeProvider>
+			</Provider>
+		)
+	}
+}
+
 StyleProvider.propTypes = {
 	dev: PropTypes.bool,
 	selectorPrefix: PropTypes.string,
@@ -64,3 +81,6 @@ StyleProvider.propTypes = {
 	fontNode: PropTypes.object,
 	children: PropTypes.node.isRequired
 }
+
+export { createRenderer }
+export default StyleProvider

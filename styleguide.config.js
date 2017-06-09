@@ -1,5 +1,6 @@
-const loaders = require('loaders')
-const path = require('path')
+const loaders = require('loaders'),
+	path = require('path')
+
 module.exports = {
 	components: 'src/components/**/[A-Za-z]*.js',
 	template: 'src/utils/index.html',
@@ -11,14 +12,21 @@ module.exports = {
 		},
 		resolve: {
 			alias: {
-				'react': 'preact-compat',
+				react: 'preact-compat',
 				'react-dom': 'preact-compat',
-                'react-fela': 'preact-fela',
+				'react-fela': 'preact-fela',
 				'rsg-components/Wrapper': path.join(
 					__dirname,
-					'src/utils/Wrapper'
+					'src/utils/Provider'
 				)
 			}
+		}
+	},
+
+	theme: {
+		color: {
+			baseBackground: '#F5F5FA',
+			sidebarBackground: '#FFFFFF'
 		}
 	}
 }

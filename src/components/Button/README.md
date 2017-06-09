@@ -1,6 +1,6 @@
 Basic button:
 
-    <Button color="pink">Hello Pink</Button>
+    <Button color="red">Hello Pink</Button>
 
 Big pink button:
 
