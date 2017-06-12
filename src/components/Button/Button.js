@@ -12,13 +12,7 @@ const ButtonStyle = props => ({
 	background: '#cecece'
 })
 
-const Btn = createComponent(ButtonStyle, 'button')
-
-// if not wrapped in a stateless component, the export is not found.
-// Probably issue with styleguidist or fela.
-const Button = props => {
-	return <Btn {...props}>{props.children}</Btn>
-}
+const Button = createComponent(ButtonStyle, 'button')
 
 Button.propTypes = {
 	/** Button label */
